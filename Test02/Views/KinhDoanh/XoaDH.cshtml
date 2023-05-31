@@ -1,0 +1,81 @@
+﻿@model Test02.Models.DonHang
+@using Test02.Models
+@{
+    ViewBag.Title = "XoaDH";
+    Layout = "~/Views/KinhDoanh/Layout/LayoutKD.cshtml";
+    QuanLyDLproEntities2 db = new QuanLyDLproEntities2();
+    ViewBag.dh = "active";
+    ViewBag.nd = "Xóa đơn hàng ";
+}
+
+<h3>Bạn có muốn xóa đơn hàng @Model.MaDH này ?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MaDH)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaDH)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MaDL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaDL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MaNVLap)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaNVLap)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NgayLap)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NgayLap)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TrangThai)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TrangThai)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TinhTrangThanhToan)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TinhTrangThanhToan)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DiemGiao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DiemGiao)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Quay lại danh sách", "QuanLyDH")
+        </div>
+    }
+</div>

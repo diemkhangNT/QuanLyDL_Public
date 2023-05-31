@@ -1,0 +1,156 @@
+﻿@model IEnumerable<Test02.Models.Kho>
+@using Test02.Models
+@{
+    ViewBag.Title = "QuanLyKho";
+    Layout = "~/Views/PhongKho/Layout/_LayoutPage1.cshtml";
+    ViewBag.Name = "Danh sách kho";
+    ViewBag.qlk = "active";
+    ViewBag.hieuung2 = "bx-tada";
+
+}
+
+@{
+    var checkMessage = TempData["AlertMessage"];
+    if (checkMessage == "Đã xóa")
+    {
+        <script>
+            swal({
+                title: "Xóa thành công",
+                text: "Đã xóa @TempData["MaCTKkk"]!",
+                icon: "success",
+                button: "OK",
+            });
+        </script>
+    }
+    else if (checkMessage == "Đã thêm")
+    {
+        <script>
+            swal({
+                title: "Thêm thành công",
+                text: "Đã thêm @TempData["MaCTKkk"]!",
+                icon: "success",
+                button: "OK",
+            });
+        </script>
+    }
+    else if (checkMessage == "Đã cập nhật")
+    {
+        <script>
+            swal({
+                title: "Cập nhật thành công",
+                text: "Đã cập nhật @TempData["MaCTKkk"]!",
+                icon: "success",
+                button: "OK",
+            });
+        </script>
+    }
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="tile">
+                <h5>Tìm sản phẩm trong kho dựa vào đơn hàng</h5>
+                <input class="form-control" name="Masp" type="text" placeholder="Nhập mã sản phẩm!" />
+                <div style="margin-top:10px; text-align:center">
+                    <button type="submit" class="btn btn-outline-dark">Tìm kiếm</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+}
+
+@* Danh sách kho hàng *@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="tile">
+            <h3 class="tile-title" style="text-align:center;"><b>DANH SÁCH KHO HÀNG</b></h3>
+            <div class="tile-body table-responsive-sm">
+                <div class="row element-button">
+                    <a class="btn btn-add btn-sm" href="~/PhongKho/ThemKho" title="Thêm" style="margin-left:20px;">
+                        <i class="fas fa-plus"></i>
+                        Thêm kho mới
+                    </a>
+                    <a class="btn btn-delete btn-sm print-file js-textareacopybtn" type="button" title="Làm mới" href="/PhongKho/QuanLyKho" style="margin-left:20px;">
+                        <i class="fas fa-copy"></i> 
+                        Làm mới danh sách
+                    </a>
+                </div>
+                <table class="table table-hover table-striped table-bordered js-copytextarea" cellpadding="0" cellspacing="0" border="0"
+                       id="sampleTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Mã kho
+                            </th>
+                            <th>
+                                Tên kho
+                            </th>
+                            <th>
+                                Địa chỉ
+                            </th>
+                            <th>
+                                Số chi tiết kho
+                            </th>
+                            <th>
+                                Chức năng
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MaKho)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TenKho)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DiaChi)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ChiTietKhoes.Count)
+                                </td>
+                                <td>
+                                    <a href="~/PhongKho/ChinhSuaKho/@item.MaKho" class="btn btn-outline-primary btn-sm" title="Chỉnh sửa"><i class="fa fa-edit"></i></a>
+                                    <a href="~/PhongKho/ChiTietKho/@item.MaKho" class="btn btn-outline-info btn-md" title="Chi tiết"> <i class="fa fa-info"></i> </a>
+                                    <a href="~/PhongKho/XoaKho/@item.MaKho" class="btn btn-outline-danger btn-sm" title="Xóa"><i class="fa fa-remove"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@* /> danh sách kho *@
+
+
+
+<script>
+    //oTable = $('#sampleTable').dataTable();
+    //$('#all').click(function (e) {
+    //    $('#sampleTable tbody :checkbox').prop('checked', $(this).is(':checked'));
+    //    e.stopImmediatePropagation();
+    //});
+
+    //In dữ liệu
+    var myApp = new function () {
+        this.printTable = function () {
+            var tab = document.getElementById('sampleTable');
+            var win = window.open('', '', 'height=700,width=700');
+
+            win.document.write(tab.outerHTML);
+            win.document.close();
+            win.print();
+        }
+    }
+
+</script>

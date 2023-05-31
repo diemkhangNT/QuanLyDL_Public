@@ -1,0 +1,89 @@
+﻿@using Test02.Models
+@{
+    ViewBag.Title = "TonKho";
+    Layout = "~/Views/PhongKho/Layout/_LayoutPage1.cshtml";
+    ViewBag.tk = "active";
+    ViewBag.Name = "Tồn kho";
+    ViewBag.hieuung3 = "bx-tada";
+    QuanLyDLproEntities2 db = new QuanLyDLproEntities2();
+    var dsctk = db.ChiTietKhoes.ToList();
+}
+@{
+    var checkMessage = TempData["AlertMessage"];
+    if (checkMessage == "Đã thêm")
+    {
+        <script>
+            swal({
+                title: "Thêm thành công",
+                text: "Đã thêm phiếu đề nghị xuất kho @TempData["MaPNKho"]!",
+                icon: "success",
+                button: "OK",
+            });
+        </script>
+    }
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="row element-button">
+                <div class="col-md-12">
+                    <a class="btn btn-delete btn-sm pdf-file" type="button" title="In" href="GiaiQuyetTonKho">
+                        <i class="fas fa-circle-notch"></i> Giải quyết tất cả
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3 class="tile-title">DANH SÁCH HÀNG TỒN KHO</h3>
+            </div>
+            <div class="tile-body">
+                <table class="table table-hover table-bordered js-copytextarea" cellpadding="0" cellspacing="0" border="0"
+                       id="sampleTable">
+                    <thead>
+                        <tr>
+                            <th>Mã Kho</th>
+                            <th>Mã sản phẩm</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Giá tiền</th>
+                            <th>Đơn vị tính</th>
+                            <th>Số lượng</th>
+                            <th>Tình trạng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in dsctk)
+                        {
+                            //thử sử dụng groupby nhá
+                            if (item.TinhTrang == "Tồn kho")
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MaKho)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MaSP)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SanPham.TenSP)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SanPham.Gia)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SanPham.DonViTinh)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SoLuong)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TinhTrang)
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

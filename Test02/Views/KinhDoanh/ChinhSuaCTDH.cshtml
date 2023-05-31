@@ -1,0 +1,77 @@
+﻿@model Test02.Models.ChiTietDonHang
+@using Test02.Models;
+@{
+    ViewBag.Title = "ChinhSuaCTDH";
+    Layout = "~/Views/KinhDoanh/Layout/LayoutKD.cshtml";
+    ViewBag.dh = "active";
+    ViewBag.nd = "Chỉnh sửa chi tiết đơn hàng";
+    QuanLyDLproEntities2 db = new QuanLyDLproEntities2();
+}
+
+<div class="tile">
+    @{var madl = db.DonHangs.Where(s => s.MaDH == Model.MaDH).FirstOrDefault();
+    }
+    <h2>Chỉnh sửa chi tiết đơn hàng @Model.MaDH của đại lý @madl.MaDL</h2>
+    <div class="tile-body">
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <h4>ChiTietDonHang</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.MaCTDH)
+                @Html.HiddenFor(model => model.MaDH)
+                @Html.HiddenFor(model => model.ChietKhau)
+                @Html.HiddenFor(model => model.ThanhTien)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MaSP, "MaSP", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @{ 
+                            var dssp = db.SanPhams.ToList().OrderBy(s=>s.MaSP);
+                            var tensp = db.SanPhams.Where(s => s.MaSP == Model.MaSP).FirstOrDefault();
+                        }
+                        <select class="form-control" id="MaSP" name="MaSP">
+                            <option value="@Model.MaSP">@Model.MaSP -- @tensp.TenSP </option>
+                            @{
+                                foreach (var item01 in dssp)
+                                {
+                                    if (Model.MaSP != item01.MaSP) 
+                                    { 
+                                        <option value="@item01.MaSP">@item01.MaSP -- @item01.TenSP</option>
+                                    }
+                                    
+                                }
+
+                            }
+                        </select>
+                        @Html.ValidationMessageFor(model => model.MaSP, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SoLuong, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.SoLuong, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SoLuong, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Lưu chi tiết đơn hàng @Model.MaDH" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        }
+        <div>
+            @Html.ActionLink("Quay lại danh sách đơn hàng", "QuanLyDH")
+        </div>
+    </div>
+</div>
+
+

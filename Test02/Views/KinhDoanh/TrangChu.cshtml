@@ -1,0 +1,228 @@
+﻿@using Test02.Models;
+@{
+
+    ViewBag.Title = "TrangChu";
+    Layout = "~/Views/KinhDoanh/Layout/LayoutKD.cshtml";
+    ViewBag.home = "active";
+    ViewBag.nd = "Bảng điều khiển";
+    ViewBag.hieuung1 = "bx-tada";
+    QuanLyDLproEntities2 db = new QuanLyDLproEntities2();
+    var nv = (NhanVien)Session["user"];
+    var dsdonhang = db.DonHangs.ToList();
+    var dsdl = db.DaiLies.ToList();
+    var sldl = db.DaiLies.Count();
+    var sldh = db.DonHangs.Where(s => s.TinhTrangThanhToan == "Đã thanh toán").Count();
+    var slsp = db.SanPhams.Count();
+    var sldhchuaxl = db.DonHangs.Where(s => s.TrangThai == "Chưa xử lý").Count();
+    var slbc = db.BaoCaos.Where(s => s.MaNV == nv.MaNV).Count();
+
+    var slpxn = db.PhieuNhapXuats.Where(s => s.MaPhieu.Substring(0, 4) == "KDPX" || s.MaPhieu.Substring(0, 4) == "KDPN").Count();
+}
+<div class="row">
+    <!--Thông tin kho và số sản phẩm sắp hết hàng-->
+    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+        <div class="row">
+            <!-- col-6 -->
+            <div class="col-lg-6 col-xs-12">
+                <a class="widget-small info coloured-icon" href="~/KinhDoanh/QuanLyDL">
+                    <i class='icon bx bxs-user-account fa-3x'></i>
+                    <div class="info">
+                        <h4>Thông tin Đại lý</h4>
+                        <p><b>Tổng số lượng được quản lý: @sldl đại lý</b></p>
+                        <p class="info-tong">Chịu trách nhiệm quản lý bởi Kinh doanh</p>
+                    </div>
+                </a>
+            </div>
+            <!-- col-6 -->
+            <div class="col-lg-6 col-xs-12">
+                <a class="widget-small warning coloured-icon " href="~/KinhDoanh/QuanLyDL">
+                    <i class='icon bx bxs-tag-x fa-3x'></i>
+                    <div class="info">
+                        <h4>THÔNG TIN SẢN PHẨM</h4>
+                        <p><b>Tổng số lượng mặt hàng: @slsp  </b></p>
+                        <p class="info-tong">Số lượng mặt hàng hiện có trong hệ thống</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--Tổng sản phẩm và sản phẩm tồn kho-->
+    <div class="col-md-12 col-lg-12">
+        <div class="row">
+            <!-- col-6 -->
+            <div class="col-lg-6 col-xs-12">
+                <a class="widget-small primary coloured-icon " href="~/KinhDoanh/QuanLyDH">
+                    <i class='icon bx bxs-shopping-bag-alt fa-3x'></i>
+                    <div class="info">
+                        <h4>ĐƠN HÀNG THÀNH CÔNG</h4>
+                        <p><b>Tổng số lượng đơn hàng: @sldh đơn </b></p>
+                        <p class="info-tong">Tổng số lượng đơn hàng đã được kiểm duyệt và thanh toán.</p>
+                    </div>
+                </a>
+            </div>
+            <!-- col-6 -->
+            <div class="col-lg-6 col-xs-12">
+                <a class="widget-small danger coloured-icon " href="~/KinhDoanh/QuanLyDH">
+                    <i class='icon bx bxs-info-circle fa-3x'></i>
+                    <div class="info">
+                        <h4>ĐƠN HÀNG ĐANG CHỜ</h4>
+                        <p><b> Tổng số lượng đơn hàng: @sldhchuaxl</b></p>
+                        <p class="info-tong">Số lượng đơn hàng đang được chờ xử lý!</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--Tổng phiếu xuất và tổng phiếu nhập-->
+    <div class="col-md-12 col-lg-12">
+        <div class="row">
+            <!-- col-6 -->
+            <div class="col-lg-6 col-xs-12">
+                <a class="widget-small info coloured-icon " href="~/KinhDoanh/BaoCao">
+                    <i class='icon fa-3x bx bxs-chart'></i>
+                    <div class="info">
+                        <h4>Báo cáo tháng này</h4>
+                        <p><b>Số lượng báo cáo đợt này: @slbc</b></p>
+                        <p class="info-tong">.</p>
+                    </div>
+                </a>
+            </div>
+            <!-- col-6 -->
+            <div class="col-lg-6 col-xs-12">
+                <a class="widget-small primary coloured-icon " href="#">
+                    <i class='icon bx bxs-info-circle fa-3x'></i>
+                    <div class="info">
+                        <h4>Phiếu đề nghị xuất/ nhập kho</h4>
+                        <p><b>Tổng số phiếu được tạo: @slpxn</b></p>
+                        <p class="info-tong">Phiếu xuất/ nhập hàng hóa ra khỏi kho.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--END-->
+</div>
+
+<div class="col-md-12">
+    <div class="tile">
+        <h3 class="tile-title">Tình trạng đơn hàng</h3>
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered js-copytextarea" cellpadding="0" cellspacing="0" border="0"
+                   id="sampleTable">
+                <thead>
+                    <tr>
+                        <th>ID đơn hàng</th>
+                        <th>Mã đại lý</th>
+                        <th>Mã nhân viên lập</th>
+                        <th>Ngày lập </th>
+                        <th>Trạng thái đơn hàng</th>
+                        <th>Địa điểm giao hàng</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ var count = 0;}
+                    @foreach (var item in dsdonhang.OrderByDescending(s => s.NgayLap))
+                    {
+                        count += 1;
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaDH)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaDL)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaNVLap)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NgayLap)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TrangThai)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DiemGiao)
+                            </td>
+                            <td>
+                                @{ var ThanhTien = string.Format("{0:0,0 vnđ}", item.TongTien);}
+                                @Html.DisplayFor(modelItem => ThanhTien)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TinhTrangThanhToan)
+                            </td>
+                        </tr>
+                        if (count > 5)
+                        {
+                            break;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- / div trống-->
+    </div>
+</div>
+<!-- / col-12 -->
+<!-- col-12 -->
+<div class="col-md-12">
+    <div class="tile">
+        <h3 class="tile-title">Danh sách đại lý mới</h3>
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered js-copytextarea" cellpadding="0" cellspacing="0" border="0"
+                   id="sampleTable">
+                <thead>
+                    <tr>
+                        <th>Mã đại lý</th>
+                        <th>Loại đại lý</th>
+                        <th>Tên đại lý</th>
+                        <th>Địa chỉ</th>
+                        <th>Số điện thoại</th>
+                        <th>Địa chỉ email</th>
+                        <th>Ngày tạo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ var check = 0;}
+                    @foreach (var item in dsdl.OrderByDescending(s => s.NgayTao))
+                    {
+
+                        if (check <= 7)
+                        {
+                            <tr>
+                                <td style="width: 150px;">
+                                    @Html.DisplayFor(modelItem => item.MaDL)
+                                </td>
+                                <td>
+                                    @{var tenldk = db.LoaiDLs.Find(item.MaLoaiDL);
+                                    }
+                                    @Html.DisplayFor(modelItem => tenldk.TenDaiLy)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TenDL)
+                                </td>
+                                <td style="width:250px;">
+                                    @Html.DisplayFor(modelItem => item.DiaChi)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SDT)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NgayTao)
+                                </td>
+
+                            </tr>
+
+                        }
+                        check++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

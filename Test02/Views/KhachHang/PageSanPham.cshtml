@@ -1,0 +1,222 @@
+﻿@*@model IEnumerable<Test02.Models.SanPham>*@
+@using Test02.Models
+@using PagedList.Mvc
+@model PagedList.PagedList<SanPham>
+@{
+    ViewBag.Title = "PageSanPham";
+    Layout = "~/Views/KhachHang/Layout/_LayoutKhachHang.cshtml";
+    ViewBag.tcdl = "active";
+    ViewBag.nd = "Trang chủ";
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    if (TempData["Themvaogiohang"] != null)
+    {
+        <script>
+            swal({
+                title: "Đã thêm sản phẩm vào giỏ hàng thành công !!!!",
+                icon: "success",
+                button: "Thoát",
+            });
+        </script>
+    }
+
+    if (TempData["hethang"] != null)
+    {
+        <script>
+            swal({
+                title: "Sản phẩm đã hết hàng!!!",
+                icon: "warning",
+                button: "Ok",
+            });
+        </script>
+    }
+
+    if (TempData["muahangthanhcong"] != null)
+    {
+        <script>
+            swal({
+                title: "Đã đặt hàng thành công!!!",
+                icon: "success",
+                button: "Ok",
+            });
+        </script>
+    }
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile table-responsive">
+            <div class="tile-title form-group" style="display: flex;">
+                <h3 style="margin-top: 10px; font-size: 20px;">DANH SÁCH SẢN PHẨM</h3>
+                <div style="width: 75%;">
+                    <form method="GET" class="pull-right" style="display: flex; width: 200px;">
+                        <input class="form-control" name="query" id="timkiem" type="text" placeholder="Tìm kiếm" value="@TempData["timkiem"]" />
+                        <a href="/KhachHang/PageSanPham" style="margin-left: -30px; margin-top: 8px;"><i class="fa fa-close"></i></a>
+                    </form>
+                </div>
+            </div>
+            <div class="tile-body">
+                <div class="row">
+                    @foreach (var item in Model)
+                    {
+                        <div style="padding: 10px;">
+                            <div class="widget-small primary coloured-icon">
+                                <a href="/KhachHang/ChiTietSP/@item.MaSP">
+                                    <img src="@item.HinhAnh" style="height: 100px ; width: 100px;" alt="">
+                                </a>
+                                <div class="info" style="width: 360px;">
+                                    <h4>@Html.DisplayFor(modelItem => item.TenSP)</h4>
+                                    @*<p><b>HSD: <b>@{var ngay = string.Format("{0:dd/MM/yyyy}", item.HanSD);} @Html.DisplayFor(modelItem => ngay)</b></b></p>*@
+                                    <p><b>Mã sản phẩm: <b>@Html.DisplayFor(modelItem => item.MaSP)</b></b></p>
+                                    <p>
+                                        <b>
+                                            Giá:
+                                            <b>@{var gia = string.Format("{0:0,0 VNĐ}", item.Gia);} @Html.DisplayFor(modelItem => gia) <span>/</span> @Html.DisplayFor(modelItem => item.DonViTinh)</b>
+                                        </b>
+                                    </p>
+                                    <p>
+                                        <span class="badge bg-info" style="margin: 5px 0px 5px 0px;">
+                                            Số lượng còn lại: @item.TongTon
+                                        </span>
+                                        <span style="margin: 5px 0px 5px 0px;">
+                                            @*<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+                                                    Thêm
+                                                </button>*@
+                                            <a class="badge bg-danger" href="/KhachHang/ThemVaoGH/@item.MaSP">Mua</a>
+                                        </span>
+
+                                        @*<div class="modal" id="myModal">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body" style="margin-top: 20px">
+                                                            <h4>Bạn có muốn thêm sản phẩm @item.MaSP này vào giỏ hàng không?</h4>
+                                                            <label style="margin-top: 20px;">Số lượng cần mua</label>
+                                                            <input type="number" placeholder="Nhập số lượng sản phẩm" style="width: 335px; height: 40px; margin-left: 10px; border-radius: 5px;" />
+                                                        </div>
+
+                                                        <div class="modal-footer" style="margin-top: 20px;">
+                                                            <button type="button" class="btn btn-close" data-bs-dismiss="modal">Hủy</button>
+                                                            <button type="submit" class="btn btn-danger" data-bs-dismiss="modal"><a href="/KhachHang/ThemVaoGH/@item.MaSP">Thêm</a></button>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>*@
+                                    </p><br />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div style="text-align:center;">
+                    Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount
+                </div>
+                <div class="MenuTrang">
+                    @Html.PagedListPager(Model, page => Url.Action("PageSanPham", new { page, query = @TempData["timkiem"] }))
+                </div>
+                <style>
+                    .MenuTrang li {
+                        width:30px;
+                        height:30px;
+                        text-align:center;
+                    }
+                    .MenuTrang ul{
+                        width:100%;
+                        justify-content:center;
+                        margin-top: 10px;
+                    }
+                    .pagination {
+                        display: compact;
+                        padding-left: 0;
+                        margin: 0;
+                        border-radius: 4px;
+                    }
+
+                        .pagination > li {
+                            display: inline-grid;
+                        }
+
+                            .pagination > li > a,
+                            .pagination > li > span {
+                                position: relative;
+                                float: left;
+                                padding-top: 5px;
+                                /*margin-left: -1px;*/
+                                line-height: 1.428571429;
+                                /*text-decoration: none;
+                                background-color: #eee;*/
+                                border: 1px solid #dddddd;
+                            }
+
+                            .pagination > li:first-child > a,
+                            .pagination > li:first-child > span {
+                                margin-left: 0;
+                                border-bottom-left-radius: 4px;
+                                border-top-left-radius: 4px;
+                            }
+
+                            .pagination > li:last-child > a,
+                            .pagination > li:last-child > span {
+                                border-top-right-radius: 4px;
+                                border-bottom-right-radius: 4px;
+                            }
+
+                            .pagination > li > a:hover,
+                            .pagination > li > span:hover,
+                            .pagination > li > a:focus,
+                            .pagination > li > span:focus {
+                                background-color: #eeeeee;
+                            }
+
+                        .pagination > .active > a,
+                        .pagination > .active > span,
+                        .pagination > .active > a:hover,
+                        .pagination > .active > span:hover,
+                        .pagination > .active > a:focus,
+                        .pagination > .active > span:focus {
+                            z-index: 2;
+                            color: #000;
+                            cursor: default;
+                            background-color: #428bca;
+                            border-color: #428bca;
+                        }
+
+                        .pagination > .disabled > span,
+                        .pagination > .disabled > a,
+                        .pagination > .disabled > a:hover,
+                        .pagination > .disabled > a:focus {
+                            color: #999999;
+                            cursor: not-allowed;
+                            background-color: #eee;
+                            border-color: #dddddd;
+                        }
+
+                    .pagination-lg > li > a,
+                    .pagination-lg > li > span {
+                        padding: 0;
+                        font-size: 18px;
+                    }
+                </style>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).on(function () {
+        $('#timkiem').on('input', function (event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: "GET",
+                url: $(this).attr('action'),
+                data: formData,
+                success: function (data) {
+                    $('#search-result').html(data);
+                }
+            })
+        })
+    })
+</script>*@
+

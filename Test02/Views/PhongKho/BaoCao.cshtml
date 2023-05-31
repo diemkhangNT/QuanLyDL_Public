@@ -1,0 +1,224 @@
+﻿@model IEnumerable<Test02.Models.BienBangKiemKe>
+@using Test02.Models;
+@{
+    ViewBag.Title = "BaoCao";
+    Layout = "~/Views/PhongKho/Layout/_LayoutPage1.cshtml";
+    ViewBag.bc = "active";
+    ViewBag.Name = "Báo cáo kho hàng";
+    ViewBag.hieuung6 = "bx-tada";
+    QuanLyDLproEntities2 db = new QuanLyDLproEntities2();
+    var dsnv = db.NhanViens.ToList();
+    var dscv = db.ChucVus.ToList();
+
+}
+@{
+    var checkMessage = TempData["AlertMessage"];
+    if (checkMessage == "Đã xóa")
+    {
+        <script>
+            swal({
+                title: "Xóa thành công",
+                text: "Đã xóa biên bản kiểm kê @TempData["MaCTKkk"]!",
+                icon: "success",
+                button: "OK",
+            });
+        </script>
+    }
+    else if (checkMessage == "Đã thêm")
+    {
+        <script>
+            swal({
+                title: "Thêm thành công",
+                text: "Đã thêm thành công biên bản kiểm kê!",
+                icon: "success",
+                button: "OK",
+            });
+        </script>
+    }
+}
+<div class="row">
+    <div class="col-md-6 col-lg-4">
+        <div class="widget-small info coloured-icon">
+            <i class='icon bx bxs-purchase-tag-alt fa-3x'></i>
+            <div class="info">
+                <h4>Tổng số kho</h4>
+                <p><b>@TempData["TongKho"] kho</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <div class="widget-small warning coloured-icon">
+            <i class='icon fa-3x bx bxs-shopping-bag-alt'></i>
+            <div class="info">
+                <h4>Tổng sản phẩm</h4>
+                <p><b>@TempData["Tongsp"] sản phẩm</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <div class="widget-small danger coloured-icon">
+            <i class='icon fa-3x bx bxs-info-circle'></i>
+            <div class="info">
+                <h4>Tổng phiếu xuất hàng</h4>
+                <p><b>@TempData["Tongpx"] phiếu</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 col-lg-4">
+        <div class="widget-small info coloured-icon">
+            <i class='icon fa-3x bx bxs-user-badge'></i>
+            <div class="info">
+                <h4>Sản phẩm sắp hết hàng</h4>
+                <p><b>@TempData["TongSPHH"] sản phẩm</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <div class="widget-small warning coloured-icon">
+            <i class='icon fa-3x bx bxs-tag-x'></i>
+            <div class="info">
+                <h4>Sản phẩm tồn kho</h4>
+                <p><b>@TempData["TongSPTK"] sản phẩm</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <div class="widget-small danger coloured-icon">
+            <i class='icon fa-3x bx bxs-receipt'></i>
+            <div class="info">
+                <h4>Tổng phiếu nhập hàng</h4>
+                <p><b>@TempData["Tongpn"] phiếu</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-body">
+                <div class="row element-button">
+                    <div class="col-sm-2">
+                        <a class="btn btn-delete btn-sm nhap-tu-file" href="~/PhongKho/CreateBBKK">
+                            <i class="fas fa-file-upload"></i> Tạo biên bản kiểm kê
+                        </a>
+                    </div>
+                    <div class="col-sm-2">
+                        <a class="btn btn-delete btn-sm print-file js-textareacopybtn" type="button" title="Sao chép" href="/PhongKho/BaoCao"><i class="fas fa-copy"></i> Làm mới danh sách</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div>
+                <h3 class="tile-title">DANH SÁCH BIÊN BẢNG KIỂM KÊ</h3>
+            </div>
+            <div class="tile-body table-responsive">
+                <table class="table table-hover table-striped table-bordered" id="sampleTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Mã biên bảng
+                            </th>
+                            <th>
+                                Mã nhân viên lập
+                            </th>
+                            <th>
+                                Chức vụ
+                            </th>
+                            <th>
+                                Tên biên bảng
+                            </th>
+                            <th>
+                                Ngày lập
+                            </th>
+                            <th>
+                                Mã kho
+                            </th>
+                            <th>Chức năng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaKK)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaNVLap)
+                            </td>
+                            <td>
+                                @{ var kd = "NVKD"; var kho = "NVK"; var kt = "NVKT"; var gh = "NVGH"; var qtv = "QTHT";
+                                    if (item.NhanVien.MaChucVu == kd)
+                                    {
+                                        <p>Trưởng phòng kinh doanh</p>
+                                    }
+                                    else if (item.NhanVien.MaChucVu == kho)
+                                    {
+                                        <p>Nhân viên kho</p>
+                                    }
+                                    else if (item.NhanVien.MaChucVu == kt)
+                                    {
+                                        <p>Kế toán</p>
+                                    }
+                                    else if (item.NhanVien.MaChucVu == gh)
+                                    {
+                                        <p>Nhân viên giao hàng</p>
+                                    }
+                                    else if (item.NhanVien.MaChucVu == qtv)
+                                    {
+                                        <p>Quản trị viên</p>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TenBienBang)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NgayLap)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaKho)
+                            </td>
+                            <td>
+                                <a href="~/PhongKho/DetailsBB/@item.MaKK" class="btn btn-outline-info btn-md" title="Chi tiết"> <i class="fa fa-info"></i> </a>
+                                <a href="~/PhongKho/DeleteBBKK/@item.MaKK" class="btn btn-outline-danger btn-sm" title="Xóa"><i class="fa fa-remove"></i></a>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- The javascript plugin to display page loading on top-->
+<script src="~/Scripts/pace.min.js"></script>
+<!-- Page specific javascripts-->
+<script type="text/javascript" src="~/Scripts/chart.js"></script>
+
+<!-- Google analytics script-->
+<script type="text/javascript">
+    if (document.location.hostname == 'pratikborsadiya.in') {
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        ga('create', 'UA-72504830-1', 'auto');
+        ga('send', 'pageview');
+    }
+</script>

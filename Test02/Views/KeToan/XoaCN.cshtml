@@ -1,0 +1,45 @@
+﻿@model Test02.Models.PhieuCongNo
+@using Test02.Models;
+
+@{
+    ViewBag.Title = "XoaCN";
+    Layout = "~/Views/KeToan/Layout/_LayoutPageKeToan.cshtml";
+    ViewBag.cn = "active";
+    ViewBag.nd = "Xóa phiếu công nợ";
+    QuanLyDLproEntities2 db = new QuanLyDLproEntities2();
+
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            @{
+                DateTime ngay = (DateTime)(Model.NgayLapCN);
+                int thang = ngay.Month;
+
+                var daily = db.DaiLies.Where(s => s.MaDL == Model.MaDL).FirstOrDefault();
+                var loaidaily = db.LoaiDLs.Where(s => s.MaLoaiDL == daily.MaLoaiDL).FirstOrDefault();
+            }
+            <div style="text-align:center">
+                <h4 style="text-align:center">PHIẾU CÔNG NỢ</h4>
+                <p><strong>Ngày:</strong>  @Html.DisplayFor(model => model.NgayLapCN)</p>
+                <p><strong>Mã công nợ:</strong>  @Html.DisplayFor(model => model.MaCongNo)</p>
+            </div>
+            <p> <strong>Tên đại lý: </strong>@Html.DisplayFor(model => daily.TenDL)</p>
+            <p> <strong>Loại đại lý: </strong>@Html.DisplayFor(model => loaidaily.MaLoaiDL)</p>
+            <p> <strong>Địa chỉ: </strong>@Html.DisplayFor(model => daily.DiaChi)</p>
+            <p> <strong>Phiếu công nợ tháng: </strong>@thang</p>
+            <p> <strong>Hạn trả: </strong>@Html.DisplayFor(model => model.HanTra)</p>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions no-color">
+                    <input type="submit" value="Xóa phiếu" class="btn btn-default" /> |
+                    @Html.ActionLink("Quay lại danh sách công nợ", "QLCongno")
+                </div>
+            }
+        </div>
+    </div>
+</div>

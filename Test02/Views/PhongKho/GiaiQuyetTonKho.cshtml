@@ -1,0 +1,104 @@
+﻿@model Test02.Models.PhieuNhapXuat
+@using Test02.Models
+@{
+    ViewBag.Title = "GiaiQuyetTonKho";
+    Layout = "~/Views/PhongKho/Layout/_LayoutPage1.cshtml";
+    ViewBag.hh = "active";
+    ViewBag.Name = "Giải phóng hàng tồn kho";
+    ViewBag.hieuung3 = "bx-tada";
+    QuanLyDLproEntities2 db = new QuanLyDLproEntities2();
+    var dsCTKho = db.ChiTietKhoes.ToList();
+    List<string> distint = new List<string>();
+}
+
+<div class="tile">
+    <h3 style="text-align:center">PHIẾU ĐỀ NGHỊ XUẤT KHO</h3>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="tile-body">
+        <form class="row">
+            <div class="form-group col-md-12">
+                <label class="control-label">Kính gửi: </label>
+                <input class="form-control" type="text" required>
+            </div>
+            <div class="form-group col-md-12">
+                <label class="control-label">Xuất tại các kho: </label> <br />
+                @for (int i = 0; i < dsCTKho.Count; i++)
+                {
+                    if (dsCTKho[i].TinhTrang == "Tồn kho")
+                    {
+                        distint.Add(dsCTKho[i].MaKho);
+                        distint = distint.Distinct().ToList();
+                    }
+                }
+                @for (int i = 0; i < dsCTKho.Count; i++)
+                {
+                    for (int j = 0; j >= 0 && j < distint.Count; j++)
+                    {
+                        if (distint[j].Equals(dsCTKho[i].MaKho))
+                        {
+                            <span>@dsCTKho[i].MaKho - @dsCTKho[i].Kho.TenKho </span> <br />
+                            distint.RemoveAt(j);
+                        }
+                    }
+                }
+            </div>
+            <div class="form-group col-md-12">
+                <label class="control-label">Họ tên người làm phiếu:</label>
+                <input class="form-control" type="text" required>
+            </div>
+            <div class="form-group col-md-12">
+                <label class="control-label">Danh sách sản phẩm tồn kho cần giải quyết:</label>
+                <table class="table table-hover table-bordered js-copytextarea" cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;">Mã Kho</th>
+                            <th style="text-align:center;">Mã sản phẩm</th>
+                            <th style="text-align:center;">Tên sản phẩm</th>
+                            <th style="text-align:center;">Giá tiền</th>
+                            <th style="text-align:center;">Số lượng tồn</th>
+                            <th style="text-align:center;">Đơn vị tính</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in dsCTKho)
+                        {
+                            if (item.TinhTrang == "Tồn kho")
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MaKho)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MaSP)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SanPham.TenSP)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SanPham.Gia)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SoLuong)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SanPham.DonViTinh)
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </form>
+        <input type="submit" value="Lưu phiếu" class="btn btn-save" />
+        <a class="btn btn-cancel" href="/PhongKho/QuanLyDL">Hủy bỏ</a>
+        </div>
+    }
+    
+</div>
+

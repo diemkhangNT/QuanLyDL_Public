@@ -1,0 +1,358 @@
+﻿﻿
+@using Test02.Models;
+
+@{
+    ViewBag.Title = "Trang chủ kế toán";
+    Layout = "~/Views/KeToan/Layout/_LayoutPageKeToan.cshtml";
+    ViewBag.homekt = "active";
+    ViewBag.nd = "Trang chủ";
+    QuanLyDLproEntities2 db = new QuanLyDLproEntities2();
+
+
+}
+
+<div class="tongquan">
+    <div class="container">
+        <div class="row">
+            @*CHƯA THANH TOÁN*@
+            <div class="col-sm-4">
+                <a href="/KeToan/QLDonHang">
+                    <div class="stat-card">
+                        <div class="stat-card__content">
+                            <p class="text-uppercase mb-1 text-muted">ĐƠN HÀNG ĐẠI LÝ</p>
+                            <h4>@ViewBag.tongchuathanhtoan đơn chưa thanh toán</h4>
+                            <div style="font-size:16px">
+                                <span class="text-success font-weight-bold ">+ @ViewBag.donchuathanhtoan</span>
+                                <span class="text-muted">đơn mới trong ngày</span>
+                            </div>
+                        </div>
+                        <div class="stat-card__icon stat-card__icon--success">
+                            <div class="stat-card__icon-circle" style=" background: rgba(0, 123, 255, 0.2);">
+                                <i class="fa fa-clipboard-check" style="color: rgb(0, 28, 64);"></i>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+            @*ĐANG NỢ*@
+            <div class="col-sm-4">
+                <a href="#idcho">
+                    <div class="stat-card">
+                        <div class="stat-card__content">
+                            <p class="text-uppercase mb-1 text-muted">ĐƠN HÀNG ĐẠI LÝ</p>
+                            <h4>@ViewBag.tongdonno đơn đang nợ</h4>
+                            <div style="font-size:16px">
+                                <span class="text-success font-weight-bold ">+@ViewBag.donno</span>
+                                <span class="text-muted">đơn mới trong ngày</span>
+                            </div>
+                        </div>
+                        <div class="stat-card__icon stat-card__icon--success">
+                            <div class="stat-card__icon-circle" style=" background: rgba(0, 123, 255, 0.2);">
+                                <i class="fa fa-dolly" style="color: rgb(0, 28, 64);"></i>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+            <div class="col-sm-4">
+                <a href="/KeToan/QLDonDaGiao">
+                    <div class="stat-card">
+                        <div class="stat-card__content">
+                            <p class="text-uppercase mb-1 text-muted">ĐƠN HÀNG ĐẠI LÝ</p>
+                            <h4>@ViewBag.tongdathanhtoan đơn đã thanh toán</h4>
+                            <div style="font-size:16px">
+                                <span class="text-success font-weight-bold ">+@ViewBag.donthanhtoan</span>
+                                <span class="text-muted"> đơn mới trong ngày</span>
+                            </div>
+                        </div>
+                        <div class="stat-card__icon stat-card__icon--success">
+                            <div class="stat-card__icon-circle" style=" background: rgba(0, 123, 255, 0.2);">
+                                <i class="fa fa-truck" style="color: rgb(0, 28, 64);"></i>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+            @{
+                List<DaiLy> dly = db.DaiLies.ToList();
+
+            }
+            <div class="col-sm-4">
+                <a href="#tinhtrangdl">
+                    <div class="stat-card">
+                        <div class="stat-card__content">
+                            <p class="text-uppercase mb-1 text-muted">TÌNH TRẠNG ĐẠI LÝ</p>
+                            <h4>@Session["demdl"] đại lý</h4>
+                            <div style="font-size:16px">
+                                <span class="text-muted">Mức tình trạng cảnh báo</span>
+                            </div>
+                        </div>
+                        <div class="stat-card__icon stat-card__icon--success">
+                            <div class="stat-card__icon-circle" style="background: rgba(0, 123, 255, 0.2); ">
+                                <i class="fa fa-user-alt" style="color: #007bff;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+            @{
+                List<sp_CongNoDenHan_Result> cnhan = Session["cndenhan"] as List<sp_CongNoDenHan_Result>;
+                int tongphieu = cnhan.Count;
+            }
+            <div class="col-sm-4">
+                <a href="#congno">
+                    <div class="stat-card">
+                        <div class="stat-card__content">
+                            <p class="text-uppercase mb-1 text-muted">PHIẾU CÔNG NỢ ĐẠI LÝ</p>
+                            <h4> @tongphieu công nợ</h4>
+                            <div style="font-size:16px">
+                                <span class="text-muted">Công nợ gần đến hạn trả</span>
+                            </div>
+                        </div>
+                        <div class="stat-card__icon stat-card__icon--success">
+                            <div class="stat-card__icon-circle" style="background: #CBFAD5; ">
+                                <i class="fa fa-money-bill" style="color: green;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+
+            <div class="col-sm-4">
+                <a href="/KeToan/Doanhthu">
+                    <div class="stat-card">
+                        <div class="stat-card__content">
+                            <p class="text-uppercase mb-1 text-muted">DOANH THU</p>
+                            @{
+                                var doanhthu = string.Format("{0:0,0 vnđ}", Session["doanhthu"]);
+                            }
+                            <h4>@doanhthu</h4>
+                            <div style="font-size:16px">
+                                <span class="text-muted">Doanh thu tính theo tháng</span>
+                            </div>
+                        </div>
+                        <div class="stat-card__icon stat-card__icon--success">
+                            <div class="stat-card__icon-circle" style="background: rgba(0, 123, 255, 0.2); ">
+                                <i class="fa fa-money-check-alt" style="color: #007bff;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+@*CONGNO*@
+
+<div class="col-md-12" id="congno">
+    <div class="tile">
+        <h3 class="tile-title">Danh sách công nợ sắp tới hạn</h3>
+        <div class="row">
+            <div class="col-sm-12 table-responsive">
+                <table class="table table-hover table-bordered js-copytextarea" role="grid">
+                    <thead>
+                        <tr role="row">
+                            <th>Mã CN</th>
+                            <th>Đại lý</th>
+                            <th>Loại đại lý</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày lập</th>
+                            <th>Ngày trả</th>
+                            <th>Thành tiền</th>
+                            <th></th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in cnhan)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MaCongNo)
+                                </td>
+                                @{
+                                    var daily = db.DaiLies.Where(d => d.MaDL == item.MaDL).FirstOrDefault();
+                                    var ThanhTien = string.Format("{0:0,0 vnđ}", item.TienNo);
+                                    var ngaylap = String.Format("{0:d/M/yyyy}", item.NgayLapCN);
+                                    var ngaytra = String.Format("{0:d/M/yyyy}", item.HanTra);
+                                }
+                                <td>
+                                    @Html.DisplayFor(modelItem => daily.TenDL)-@Html.DisplayFor(modelItem => item.MaDL)
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => daily.MaLoaiDL)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TrangThai)
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => ngaylap)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => ngaytra)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => ThanhTien)
+                                </td>
+                                <td>
+                                    <a href="/KeToan/DSCongnoNo/@item.MaDL" class="btn btn-success btn-sm">Xem</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="col-md-12" id="tinhtrangdl">
+    <div class="tile">
+        <h3 class="tile-title" style="padding-bottom:10px;">Tình trạng đại lý</h3>
+        <a href="/KeToan/DSDaiLy" class="btn btn-success btn-sm">Xem chi tiết</a>
+        <div class="row">
+            <div class="col-sm-12 table-responsive" style="padding-top:10px;">
+                <table class="table table-hover table-bordered js-copytextarea" role="grid">-->
+@*//Phần render từng dòng trong C#*@
+<!--<thead>
+                        <tr role="row">
+                            <th>Mã đại lý</th>
+                            <th>Tên đại lý</th>
+                            <th>Loại đại lý</th>
+                            <th>Tổng công nợ</th>
+                            <th>Trạng thái</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in dly)
+                        {
+                            <tr>
+                                <td style="width: 150px;">
+                                    @Html.DisplayFor(modelItem => item.MaDL)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TenDL)
+
+                                </td>
+                                <td>
+                                    @{var tenldk = db.LoaiDLs.Find(item.MaLoaiDL);
+                                    }
+                                    @Html.DisplayFor(modelItem => tenldk.TenDaiLy) - @Html.DisplayFor(modelItem => item.MaLoaiDL)
+                                </td>
+
+                                <td>
+                                    @{
+                                        double tongno = 0;
+                                        var congno = db.PhieuCongNoes.Where(n => n.MaDL == item.MaDL && n.TrangThai == "Chưa thanh toán");
+                                        foreach (var cn in congno)
+                                        {
+                                            tongno += (double)cn.TienNo;
+                                        }
+
+                                        var tiencongnno = string.Format("{0:0,0 vnđ}", tongno);
+
+                                    }
+
+                                    @Html.DisplayFor(modelItem => tiencongnno)
+
+                                </td>
+
+
+
+                                @{
+                                    int tongdonhang = 0;
+                                    double maxcn = 0;
+
+
+                                    if (item.MaLoaiDL == "LDL01")
+                                    {
+                                        maxcn = 500000000;
+                                    }
+                                    else if (item.MaLoaiDL == "LDL02")
+                                    {
+                                        maxcn = 250000000;
+                                    }
+                                    else
+                                    {
+                                        maxcn = 100000000;
+
+                                    }
+                                    double dangercn = maxcn - (maxcn * 0.1);
+                                    double warningcn = maxcn - (maxcn * 0.2);
+                                }
+                                <td style="text-align:center">
+
+                                    @if (tongno > dangercn)
+                                    {
+                                        <span class="badge badge-danger">Nguy cơ</span>
+                                    }
+                                    else if (tongno >= warningcn && tongno <= dangercn)
+                                    {
+                                        <span class="badge badge-warning">Cảnh báo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-success">Bình thường</span>
+                                    }
+                                </td>
+
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>-->
+
+
+<style>
+    /*  TRANG CHỦ*/
+    .stat-card {
+        background: #fff;
+        padding: 20px;
+        margin-bottom: 25px;
+        border-radius: 5px;
+        overflow: hidden;
+        display: flex;
+        justify-content: space-between;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s;
+    }
+
+        .stat-card:hover {
+            box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2)
+        }
+
+    .stat-card__icon-circle {
+        height: 60px;
+        width: 60px;
+        border-radius: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .stat-card__icon-circle i {
+            font-size: 30px;
+        }
+</style>
+
+
+
